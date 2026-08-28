@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>妤的留言板🐾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    min-height:100vh;
+    background:#fbd9e0;
+    font-family:"STKaiti","KaiTi","SimSun",serif;
+    padding:20px 16px;
+}
+.page-title{
+    text-align:center;
+    font-size:22px;
+    color:#44222b;
+    margin-bottom:20px;
+    letter-spacing:2px;
+}
+.heart{
+    position:fixed;
+    z-index:9999;
+    color:#ff88a2;
+    font-size:24px;
+    pointer-events:none;
+}
+.wrap{
+    max-width:540px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+}
+.top-card{
+    background:#fff2f5;
+    border-radius:30px;
+    padding:40px 30px 32px 30px;
+    margin-bottom:22px;
+    position:relative;
+    box-shadow: 0 4px 14px #f2c8d1;
+}
+.avatar-wrap{
+    position:absolute;
+    top:14px;
+    right:18px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:4px solid #ffd2dc;
+    overflow:hidden;
+    background-color:#ffd2dc;
+    z-index:10;
+    box-shadow:0 6px 12px #e8b4c0;
+}
+.avatar-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+h1{
+    font-size:32px;
+    color:#8c3c50;
+    margin-bottom:12px;
+    padding-right:85px;
+    font-weight:normal;
+    letter-spacing:1px;
+}
+.sub-title{
+    font-size:20px;
+    color:#9c4c60;
+    margin-bottom:14px;
+    letter-spacing:1px;
+}
+.short-line{
+    width:70px;
+    height:2px;
+    background:#d8a0b0;
+    margin-bottom:20px;
+}
+.desc{
+    font-size:17px;
+    line-height:1.8;
+    color:#b0687c;
+}
+.msg-card{
+    background:#fff2f5;
+    border-radius:30px;
+    padding:32px 28px;
+    box-shadow: 0 4px 14px #f2c8d1;
+}
+.msg-card h2{
+    font-size:28px;
+    color:#8c3c50;
+    margin-bottom:8px;
+    font-weight:normal;
+}
+.tip-text{
+    color:#b0687c;
+    font-size:17px;
+    margin-bottom:22px;
+}
+textarea{
+    width:100%;
+    height:145px;
+    border:2px solid #f7c8d4;
+    border-radius:24px;
+    background:#ffffff;
+    padding:20px;
+    font-family:"STKaiti","KaiTi","SimSun",serif;
+    font-size:18px;
+    outline:none;
+    resize:none;
+}
+textarea::placeholder{color:#d494a4;}
+
+#submitBtn,
+#clearBtn{
+    width:100%;
+    margin-top:12px;
+    padding:14px;
+    border:none;
+    border-radius:999px;
+    font-family:"STKaiti","KaiTi","SimSun",serif;
+    font-size:20px;
+    letter-spacing:2px;
+    color:#502430;
+}
+#submitBtn{
+    background:#f899ad;
+}
+#submitBtn:active{
+    background:#e8889a;
+}
+#clearBtn{
+    background:#f2c8d1;
+}
+#clearBtn:active{
+    background:#e8b4c0;
+}
+
+.msg-item{
+    margin-top:20px;
+    background:#ffffff;
+    border-radius:24px;
+    padding:20px;
+    border:2px solid #f7d2db;
+}
+.msg-time{
+    margin-top:10px;
+    color:#c28496;
+    font-size:15px;
+}
+footer{
+    text-align:center;
+    margin-top:32px;
+    color:#c0788c;
+    font-size:16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="page-title">留言板</div>
+    <div class="top-card">
+        <div class="avatar-wrap">
+            <img src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEaDJlqkUTbgPepWB3v7PZ2Ps5dmEox3wACjCkAAqm5iVQb-dXsJhIZ1j0E.jpg" alt="头像">
+        </div>
+        <h1>个人的空间</h1>
+        <div class="sub-title">岁岁常欢愉，万事皆胜意</div>
+        <div class="short-line"></div>
+        <div class="desc">
+这里是专属于你的温柔角落，记录每一份心情与感动。<br><br>
+愿你被世界温柔以待，也愿你温柔地对待自己。
+        </div>
+    </div>
+    <div class="msg-card">
+         <h2> 留言板</h2>
+        <div class="tip-text">写下想说的话 嘿嘿嘿</div>
+        <textarea id="inputArea" placeholder=""></textarea>
+        <button id="submitBtn" onclick="addMsg()">提交留言</button>
+        <button id="clearBtn" onclick="clearAllMsg()">清空全部留言</button>
+        <div id="msgBox"></div>
+    </div>
+    <footer>妤妤NB 解释权归妤所有🐾</footer>
+</div>
+
+<script>
+// JS原生驱动爱心飘落
+function createHeart(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.innerText = '♥';
+    let x = Math.random() * window.innerWidth;
+    let y = -40;
+    let speedY = 1.2 + Math.random()*2.2;
+    let rotate = 0;
+    let rotateSpeed = (Math.random()-0.5)*4;
+    h.style.left = x + 'px';
+    h.style.top = y + 'px';
+    h.style.opacity = 0.55;
+    document.body.appendChild(h);
+
+    function tick(){
+        y += speedY;
+        rotate += rotateSpeed;
+        h.style.top = y + 'px';
+        h.style.transform = `rotate(${rotate}deg)`;
+        if(y < window.innerHeight + 60){
+            requestAnimationFrame(tick);
+        }else{
+            h.remove();
+        }
+    }
+    requestAnimationFrame(tick);
+}
+
+// 立刻生成一批爱心，打开页面马上就有
+for(let i=0;i<8;i++){
+    setTimeout(createHeart, i*200);
+}
+setInterval(createHeart, 350);
+
+//留言逻辑
+function render(){
+    const box=document.getElementById("msgBox");
+    box.innerHTML="";
+    let list=JSON.parse(localStorage.getItem("msgList")||"[]");
+    list.forEach(item=>{
+        const div=document.createElement("div");
+        div.className="msg-item";
+        div.innerHTML=`
+<div>${item.text}</div>
+<div class="msg-time">♡ ${item.time}</div>
+`;
+        box.appendChild(div);
+    })
+}
+render();
+
+function addMsg(){
+    const val=document.getElementById("inputArea").value.trim();
+    if(!val)return;
+    let now=new Date();
+    let timeStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    let arr=JSON.parse(localStorage.getItem("msgList")||"[]");
+    arr.push({text:val,time:timeStr});
+    localStorage.setItem("msgList",JSON.stringify(arr));
+    document.getElementById("inputArea").value="";
+    render();
+}
+
+function clearAllMsg(){
+    if(confirm("确定要清空所有留言吗？此操作不可恢复！")){
+        localStorage.removeItem("msgList");
+        render();
+    }
+}
+</script>
+</body>
+</html>
